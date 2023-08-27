@@ -247,35 +247,22 @@ Because tile 1 can only admit tiles 2 and 4 we apply both tags to them, we set t
 
 ## FAQ
 
-#### Q: Does this datapack work on older versions?
-
-A: Maybe, personally I haven't tested in older versions than 1.20 but I think it should work all the way down to 1.13. Just download this version with the resourcepack and I think it should work, just change inside the pack.mcmeta of both the datapack and resourcepack the "[pack_format](https://minecraft.fandom.com/wiki/Pack_format)" value to the desired one (take in mind that it may not work).
-
-#### Q: Does it have multiplayer compatibility?
-
-A: Yes it does.
-
 #### Q: Can I modify the datapack and redistribute it?
 
-A: Yes you can, but only say who the original creator is ([me](https://github.com/ElGeroIngles)) and if you link the original [Modrinth page](https://modrinth.com/datapack/gna) somewhere noticeable in the project.
+A: Yes you can, In my other datapacks I would ask for recognition but for this one I will not. Use it as you please.
 
 #### Q: Are you going to make more datapacks?
 
-A: Yes, I already have one in progress, so be ready!
-
-#### Q: Why I have a chest minecart in the head?
-
-A: Remember to also download the resourcepack to make it appear that it is not broken, I'm planning on making a video on how to make invisible chest minecarts, but that idea is for another video.
+A: Yeah, I will continue developing one I've already started. 
 
 ## Author
 
 - [@ElGeroIngles](https://github.com/ElGeroIngles)
 
 
-## Bug Report/Suggestions
+## Bug Report
 
-If you have found any bugs or have any suggestion, please reach out to me at [my discord server](https://discord.gg/bGd2QyqjCg).
-
+If you have found any bugs, please open an "issue" [here](https://github.com/ElGeroIngles/wfc_mc/issues) explaining the issue.
 
 ## 🔗 Links
 [![youtube](https://img.shields.io/badge/youtube-ff0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@ElGeroIngles)
@@ -289,4 +276,9 @@ If you have found any bugs or have any suggestion, please reach out to me at [my
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
+</details>
+
+<h3>Español</h3>
+<details>
+Próximamente... (dejenme descansar un rato, llevo dias con esto)
 </details>
