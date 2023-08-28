@@ -44,7 +44,7 @@ The algorithm picked a tree tile, tree tiles can only be near grass tiles, that 
 
 ![grid_tree_grass](https://i.imgur.com/Njy8yhq.png)
 
-The algorithm placed a grass tile because it could only place that tile, we say that . If we let the algorithm finish the grid it will look like this:
+The algorithm placed a grass tile because it could only place that tile, we say that it has been **collapsed**. If we let the algorithm finish the grid it will look like this:
 
 ![grid_full](https://i.imgur.com/pWc1hhX.png)
 
