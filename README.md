@@ -40,7 +40,7 @@ The algorithm picks the square with the lowest value, if there're several with t
 
 ![grid_tree](https://i.imgur.com/MBh6uHC.png)
 
-The algorithm picked a tree tile, tree tiles can only be near grass tiles, that makes the near tiles only have one possible option, so they value is reduced. Let's place another one following the rule to place next the tile with the lowest possibilities:
+The algorithm picked a tree tile, tree tiles can only be near grass tiles, that makes the near tiles only have one possible option, so they value is reduced. Let's place another one following the rule to place next the tile with the lowest possibilities next:
 
 ![grid_tree_grass](https://i.imgur.com/Njy8yhq.png)
 
