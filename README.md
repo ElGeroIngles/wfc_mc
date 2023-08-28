@@ -21,7 +21,7 @@ I've made a [video](https://youtu.be/uSzty4Fg2qk) in [my youtube channel](https:
 <h3>Click to show the explanation</h3>
 <details>
 
-If you want a short explanation in video check out [my video](https://youtu.be/uSzty4Fg2qk) or [this one](https://www.youtube.com/watch?v=dFYMOzoSDNE&t=49s). The Wave Function Collapse algorithm works by having a set of tiles and having rules about how they can connect each other, for example, let's say that we have as tiles a tree, grass, sand and water. We have some rules of how they can connect each other:
+If you want a short explanation in video check out [my video](https://youtu.be/uSzty4Fg2qk?t=28) or [this one](https://www.youtube.com/watch?v=dFYMOzoSDNE&t=49s). The Wave Function Collapse algorithm works by having a set of tiles and having rules about how they can connect each other, for example, let's say that we have as tiles a tree, grass, sand and water. We have some rules of how they can connect each other:
 
 - Trees can only be connected to grass.
 - Grass can only be connected to trees and sand.
