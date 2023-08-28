@@ -242,21 +242,20 @@ tag @s add can_be_tile_3
 tag @s add can_be_tile_4
 tag @s add collapsed
 ```
-Because tile 1 can only admit tiles 2 and 4 we apply both tags to them, we set the score correctly (in this case to two because it can admit two different tiles) and add the tag "**collapsed**" to indicate that that armor stand has been collapsed. After that, in "**wfc:wfc/find**", we run "**wfc:wfc/lowest_value**" to find the armor stand with the lowest value and giving it the tag "**finding**".
+Because tile 1 can only admit tiles 2 and 4 we apply both tags to them, we set the score correctly (in this case to two because it can admit two different tiles) and add the tag "**collapsed**" to indicate that that armor stand has been collapsed. After that, in "**wfc:wfc/find**", we run "**wfc:wfc/lowest_value**" to find the armor stand with the lowest value and giving it the tag "**finding**", making this a loop until it finishes the grid.
 
 </details>
 
 ## Important things to know
 
 ### Reducing near tiles
-The original algorithm reduces the possibilities near tiles can be based on where they are, for example, we have tile 1, and we want that to the left of tiles 1 there can only be tiles 2, but to the right only tiles 3, then the algorithm will do just that, but with mine is set to the same to the four near tiles. It's very easy to change, just change the tags you give to the near tiles and the score individually for each tile (north, south, east and west). (If that didn't make sense to you watch [this](https://youtu.be/rI_y2GAlQFM?t=396) explanation)
-
+The original algorithm reduces the possibilities near tiles can be based on where they are, for example, we have tile 1, and we want that to the left of tiles 1 there can only be tiles 2, but to the right only tiles 3, then the algorithm will do just that, but with mine is set to the same possibilities to the four neighbouring tiles. It's very easy to change, just change the tags you give to the near tiles and the score individually for each tile (north, south, east and west). (If that didn't make sense to you watch [this](https://youtu.be/rI_y2GAlQFM?t=396) explanation).
 
 ## FAQ
 
 #### Q: Can I modify the datapack and redistribute it?
 
-A: Yes you can, In my other datapacks I would ask for recognition but for this one I will not. Use it as you please.
+A: Yes you can, in my other datapacks I would ask for recognition but for this one I will not. Use it as you please.
 
 #### Q: Are you going to make more datapacks?
 
@@ -266,10 +265,9 @@ A: Yeah, I will continue developing one I've already started.
 
 - [@ElGeroIngles](https://github.com/ElGeroIngles)
 
-
 ## Bug Report
 
-If you have found any bugs, please open an "issue" [here](https://github.com/ElGeroIngles/wfc_mc/issues) explaining the issue.
+If you have found any bugs, please open an "issue" [here](https://github.com/ElGeroIngles/wfc_mc/issues) explaining it.
 
 ## 🔗 Links
 [![youtube](https://img.shields.io/badge/youtube-ff0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@ElGeroIngles)
@@ -287,5 +285,5 @@ If you have found any bugs, please open an "issue" [here](https://github.com/ElG
 
 <h3>Español</h3>
 <details>
-Próximamente... (dejenme descansar un rato, llevo dias con esto)
+Próximamente... (dejenme descansar un rato, llevo dias con esto, apañense con el ingles)
 </details>
