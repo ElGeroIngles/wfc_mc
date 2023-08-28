@@ -59,7 +59,7 @@ The algorithm has completed the grid following the rules we said.
 
 #### Setup
 
-For the setup we'll be using some armor stands (you can use markers, I don't know why I didn't use them but is up to you) which will indicate that a tile can be placed there (each armor stand will have the "posible_tile" tag and will also have stored in a scoreboard the amount of different tiles it can have, for this example I have 5 tiles so everyone starts with 5 in the scoreboard named: "posible_tile") and the actual tiles, for this example I'll be using 5 different tiles:
+For the setup we'll be using some armor stands (you can use markers, I don't know why I didn't use them but is up to you) which will indicate that a tile can be placed there (each armor stand will have the "posible_tile" tag and will also have stored in a scoreboard the amount of different tiles it can have, for this example I have 5 tiles so everyone starts with 5 in the scoreboard named: "posible_tile") and the actual tiles, for this example I'll be using 5 different tiles (ignore tile 6, if you have watched my video you'll understand why I have it):
 
 ![mc_grid](https://i.imgur.com/JZ41tuE.png)
 ![tiles](https://i.imgur.com/hQMknJE.png)
@@ -245,6 +245,12 @@ tag @s add collapsed
 Because tile 1 can only admit tiles 2 and 4 we apply both tags to them, we set the score correctly (in this case to two because it can admit two different tiles) and add the tag "**collapsed**" to indicate that that armor stand has been collapsed. After that, in "**wfc:wfc/find**", we run "**wfc:wfc/lowest_value**" to find the armor stand with the lowest value and giving it the tag "**finding**".
 
 </details>
+
+## Important things to know
+
+### Reducing near tiles
+The original algorithm reduces the possibilities near tiles can be based on where they are, for example, we have tile 1, and we want that to the left of tiles 1 there can only be tiles 2, but to the right only tiles 3, then the algorithm will do just that, but with mine is set to the same to the four near tiles. It's very easy to change, just change the tags you give to the near tiles and the score individually for each tile (north, south, east and west). (If that didn't make sense to you watch [this](https://youtu.be/rI_y2GAlQFM?t=396) explanation)
+
 
 ## FAQ
 
