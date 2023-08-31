@@ -71,7 +71,7 @@ I will also write down the rules each tile will have in a book inside minecraft 
 ### Code
 
 We start running the "**wfc:wfc/start**" function which will reset the grid and all tags/scores to the armor stands and give to a random armor stand the tag "finding", every armor stand with that tag is the one which the algorithm selected to place a tile there:
-```
+```hs
 # Reset:
 function wfc:wfc/reset
 
@@ -80,7 +80,7 @@ tag @e[type=minecraft:armor_stand,tag=posible_tile,limit=1,sort=random] add find
 
 ```
 Let's have a closer look to "**wfc:wfc/reset**":
-```
+```hs
 # Reset:
 scoreboard players set @e[type=minecraft:armor_stand,tag=posible_tile] posible_tile 5
 tag @e[type=minecraft:armor_stand,tag=posible_tile] remove finding
@@ -101,12 +101,12 @@ tag @e[type=minecraft:armor_stand,tag=posible_tile] remove collapsed
 ```
 As you can see we remove every tag except "posible_tile" and we reset the scoreboard of the armor stands. Let's move on.
 
-```
+```hs
 # Finding:
 execute as @e[type=minecraft:armor_stand,tag=posible_tile,tag=finding,limit=1] at @s run function wfc:wfc/find
 ```
 This is "**tick.mcfunction**", we execute as the armor stand with the tag of finding at him "**wfc:wfc/find**", let's look inside it:
-```
+```hs
 # @s is the armor_stand at @s!
 
 # Getting tile number:
@@ -141,7 +141,7 @@ function wfc:wfc/lowest_value
 ```
 Let's go from top to bottom, we first store in "n" a random number between 1-5 (because we have 5 different tiles), inclusive.
 If the armor stand has the score of 5 it means that it can have all 5 different tiles, so we just place the "n" tile:
-```
+```hs
 # Setting:
 execute if score n posible_tile matches 1 run clone 9 56 38 7 61 36 ~-1 ~ ~-1
 execute if score n posible_tile matches 2 run clone 5 56 38 3 61 36 ~-1 ~ ~-1
@@ -162,7 +162,7 @@ function wfc:wfc/placed
 We just set the tile via "**/clone**", we give a tag to indicate which tile has been placed and we run "**wfc:wfc/placed**", which will just remove the "**finding**" tag, give the "**finded**" tag and set its score to 0, because it has been placed it can no longer have another tile so we set it to 0, let's continue looking at "**wfc:wfc/find**".
 
 If it cannot have all 5 tiles and it has been collapsed (the tag "**collapsed**" is to determine that a near tile has lowered the amount of different tiles that armor stand can be) we will run "**wfc:wfc/if_collapsed**", let's look inside it:
-```
+```hs
 # Change number:
 execute store result score n posible_tile run loot spawn ~ ~ ~ loot wfc:1-5
 execute store result score r_can_be posible_tile run loot spawn ~ ~ ~ loot wfc:1-5
@@ -201,7 +201,7 @@ Ok, a lot of text, but don't worry, its very simple. Basically we are setting th
 Ok, after this incident let's continue looking at "**wfc:wfc/find**". If it cannot have all 5 tiles and it hasn't been collapsed it runs "**wfc:wfc/not_collapsed**", which is a copy of "**wfc:wfc/fresh**" but without running "**wfc:wfc/placed**" at the end.
 
 Then we are going to check near tiles to see whether they admit the tile we are going to place or not, if they admit it cool, if not we reset the tiles that don't admit it. To do this we run "**wfc:wfc/check/check**", which will just run the correct check for the tile of the tile we are placing:
-```
+```hs
 # Different tiles:
 execute if score n posible_tile matches 1 run function wfc:wfc/check/tile1
 execute if score n posible_tile matches 2 run function wfc:wfc/check/tile2
@@ -210,14 +210,14 @@ execute if score n posible_tile matches 4 run function wfc:wfc/check/tile4
 execute if score n posible_tile matches 5 run function wfc:wfc/check/tile5
 ```
 Let's say that we are placing tile 1, so we run "**wfc:wfc/check/tile1**":
-```
+```hs
 # Check if any near tile isn't a tile 1 compatible:
 execute if entity @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_1_placed] as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_1_placed] at @s run function wfc:wfc/reset_tiles
 execute if entity @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_2_placed] as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_2_placed] at @s run function wfc:wfc/reset_tiles
 execute if entity @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_5_placed] as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_5_placed] at @s run function wfc:wfc/reset_tiles
 ```
 We just check if any near tile isn't a tile 1 compatible, if so, we run as that type of tile that is in the range (any of the four near tiles) the function "**wfc:wfc/reset_tiles**", which resets the tile:
-```
+```hs
 # Reset current tile (@s):
 fill ~1 ~ ~1 ~-1 ~10 ~-1 air
 kill @e[type=item]
@@ -235,7 +235,7 @@ tag @s[tag=tile_4_placed] remove tile_4_placed
 tag @s[tag=tile_5_placed] remove tile_5_placed
 ```
 Let's continue looking at "**wfc:wfc/find**". We run function "**wfc:wfc/placed**" (which I already explained what it does). After that we collapse near tiles based on the tile we are placing, let's say that we are placing tile 1, so we run "**wfc:wfc/collapse/tile1**" as all four near tiles that haven't been collapsed yet (the term collapsed it being used wrong here but whatever):
-```
+```hs
 # Collapse near tiles:
 scoreboard players set @s posible_tile 2
 tag @s add can_be_tile_3
