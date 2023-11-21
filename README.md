@@ -294,7 +294,7 @@ Este datapack usa el algoritmo de [Wave Function Collapse](https://github.com/mx
 
 - Generación aleatoria de mapas basados en casillas usando fichas siguiendo unas reglas
 
-## Creditos
+## Créditos
 
 Este datapack está inspirado en el algoritmo original de [Wave Function Collapse](https://github.com/mxgmn/WaveFunctionCollapse).
 
