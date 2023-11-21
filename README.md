@@ -285,5 +285,285 @@ If you have found any bugs, please open an "issue" [here](https://github.com/ElG
 
 <h3>Español</h3>
 <details>
-Próximamente... (dejenme descansar un rato, llevo dias con esto, apañense con el ingles)
+
+# Wave Function Collapse (MC)
+
+Este datapack usa el algoritmo de [Wave Function Collapse](https://github.com/mxgmn/WaveFunctionCollapse) y lo implementa a minecraft usando datapacks.
+
+## Características
+
+- Generación aleatoria de mapas basados en casillas usando fichas siguiendo unas reglas
+
+## Creditos
+
+Este datapack está inspirado en el algoritmo original de [Wave Function Collapse](https://github.com/mxgmn/WaveFunctionCollapse).
+
+## Explicación/Cómo usar
+
+Hice un [vídeo](https://youtu.be/uSzty4Fg2qk) en [mi canal de youtube](https://www.youtube.com/@elgeroingles) explicando cómo funciona generalmente, pero para entenderlo al 100% aquí tenéis una explicación a detalle de cómo funciona y cómo implementarlo:
+
+### Explicación
+<h3>Haz click para ver la explicación</h3>
+<details>
+
+Si quieres una explicación breve de cómo funciona el algoritmo puedes mirar [mi vídeo](https://youtu.be/uSzty4Fg2qk?t=28) o [este otro](https://www.youtube.com/watch?v=dFYMOzoSDNE&t=49s). El algoritmo de Wave Function Collapse funciona teniendo unas piezas las cuales tienen unas reglas de cómo se deben conectar con las que tienen alrededor, por ejemplo, digamos que tenemos como piezas un árbol, pasto, arena y agua. Estas casillas tienen unas reglas de cómo se pueden conectar entre ellas:
+
+- Los árboles solo pueden estar conectados con el pasto.
+- El pasto solo puede estar conectado con árboles y arena.
+- La arena solo puede estar conectada con pasto y agua.
+- El agua solo puede estar conectado con la arena.
+
+Digamos que tenemos el siguiente tablero:
+
+![empty_grid](https://i.imgur.com/BAXI6SF.png)
+
+Cada una de las casillas al principio pueden tener cualquiera de las 4 casillas, así que cada una empieza con el valor 4:
+
+![grid_4](https://i.imgur.com/qbT222P.png)
+
+El algoritmo escoge la casilla con el valor más pequeño, si hay varios con el mismo valor escoge de entre ellas una aleatoria. Después, ponemos en esa casilla una de las posibles piezas que puede ser, como puede ser varias piezas se escoge una de ellas aleatoriamente:
+
+![grid_tree](https://i.imgur.com/MBh6uHC.png)
+
+En este caso el algoritmo ha escogida la pieza del árbol, hemos dicho que los árboles solo pueden estar al lado de piezas de pasto, eso hace que las casillas que tiene alrededor solo puedan ser de pasto. Pongamos la siguiente pieza siguiendo la regla de elegir la casilla con el valor más bajo:
+
+![grid_tree_grass](https://i.imgur.com/Njy8yhq.png)
+
+El algoritmo ha colocado una pieza de pasto porque solo podía ser esa, a eso le decimos que esa casilla ha sido **colapsada**. Si le dejamos al algoritmo terminar el tablero se vería algo así:
+
+![grid_full](https://i.imgur.com/pWc1hhX.png)
+
+El algoritmo ha terminado el tablero siguiendo las reglas que le hemos dicho.
+
+</details>
+
+### Cómo funciona en minecraft
+
+<h3>Haz click para ver cómo funciona en minecraft</h3>
+<details>
+
+#### Preparación
+
+Para usarlo vamos a necesitar unos armor stans (puedes usar markers perfectamente, no se poque no los usé pero bueno...) los cuales van a indicar que una pieza se puede colocar ahí (cada armor stand tiene la tag de "posible_tile" y tienen guardado en un scoreboard el número de piezas que puede ser, para este ejemplo tengo 5 piezas diferentes así que cada armor stand empieza con el valor 5 en el scoreboard llamado: "posible_tile") y obviamente las piezas, para este ejempl voy a estar usando 5 piezas diferentes (porfavor ignora la pieza 6, si has visto mi vídeo sabrás cuál es):
+
+![mc_grid](https://i.imgur.com/JZ41tuE.png)
+![tiles](https://i.imgur.com/hQMknJE.png)
+
+También voy a apuntar en un libro las reglas que tendrán las piezas para tenerlas a mano:
+
+![rules](https://i.imgur.com/huCs0zB.png)
+
+### Código
+
+Empezamos llamando la función "**wfc:wfc/start**" la cual va a reiniciar el tablero junto con las tags y scoreboards de los armor stands y le vamos a dar la tag de "finding" a uno de los armor stands aleatoriamente, el armor stand que tenga esta tag será la que vayamos a estar viendo para colocar una pieza en ella:
+```mcfunction
+# Reset:
+function wfc:wfc/reset
+
+# Start:
+tag @e[type=minecraft:armor_stand,tag=posible_tile,limit=1,sort=random] add finding
+
+```
+Miremos más de cerca "**wfc:wfc/reset**":
+```mcfunction
+# Reset:
+scoreboard players set @e[type=minecraft:armor_stand,tag=posible_tile] posible_tile 5
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove finding
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove finded
+fill -18 55 -11 11 61 18 air <---- Reinica el tablero
+kill @e[type=item] <---- Mato a todos los items porque estaba usando puertas en algunas piezas y se dropean si le haces fill con aire así que mato a todos los items
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove tile_1_placed
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove tile_2_placed
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove tile_3_placed
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove tile_4_placed
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove tile_5_placed
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove can_be_tile_1
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove can_be_tile_2
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove can_be_tile_3
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove can_be_tile_4
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove can_be_tile_5
+tag @e[type=minecraft:armor_stand,tag=posible_tile] remove collapsed
+```
+Como podrás ver le quitamos todas las tags excepto la de "posible_tile" y le reinicamos el scoreboard del armor astand. Sigamos.
+
+```mcfunction
+# Finding:
+execute as @e[type=minecraft:armor_stand,tag=posible_tile,tag=finding,limit=1] at @s run function wfc:wfc/find
+```
+Esta función era "**tick.mcfunction**", executamos como el armor stand con la tag de "finding" en él (at @s) la función de "**wfc:wfc/find**", miremos a ver que hace:
+```mcfunction
+# @s is the armor_stand at @s!
+
+# Getting tile number:
+execute store result score n posible_tile run loot spawn ~ ~ ~ loot wfc:1-5
+
+# Setting the tile:
+execute if score @s posible_tile matches 5 run function wfc:wfc/fresh
+
+execute unless score @s posible_tile matches 5 if entity @s[tag=collapsed] run function wfc:wfc/if_collapsed
+
+execute unless score @s posible_tile matches 5 if entity @s[tag=!collapsed] run function wfc:wfc/not_collapsed
+
+# Check if tile is valid:
+execute if entity @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=finded] run function wfc:wfc/check/check
+
+# Placed:
+function wfc:wfc/placed
+
+# Collapse near tiles:
+execute if score n posible_tile matches 1 as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=!finded,tag=!collapsed] run function wfc:wfc/collapse/tile1
+
+execute if score n posible_tile matches 2 as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=!finded,tag=!collapsed] run function wfc:wfc/collapse/tile2
+
+execute if score n posible_tile matches 3 as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=!finded,tag=!collapsed] run function wfc:wfc/collapse/tile3
+
+execute if score n posible_tile matches 4 as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=!finded,tag=!collapsed] run function wfc:wfc/collapse/tile4
+
+execute if score n posible_tile matches 5 as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=!finded,tag=!collapsed] run function wfc:wfc/collapse/tile5
+
+# Find lowest value:
+function wfc:wfc/lowest_value
+```
+Vayamos de arriba hacia abajo, primero guardamos en el "fake player" n un valor aleatorio entre el 1-5 (porque tengo 5 piezas diferentes, y usamos una loot table porque el comando **/random** aún no estaba). Si al armor stand tiene el valor de 5 en el scoreboard significa que puede tener cualquiera de las piezas, así que colocamos la pieza "n" en "**wfc:wfc/fresh**":
+```mcfunction
+# Setting:
+execute if score n posible_tile matches 1 run clone 9 56 38 7 61 36 ~-1 ~ ~-1
+execute if score n posible_tile matches 2 run clone 5 56 38 3 61 36 ~-1 ~ ~-1
+execute if score n posible_tile matches 3 run clone 1 56 38 -1 61 36 ~-1 ~ ~-1
+execute if score n posible_tile matches 4 run clone -3 56 38 -5 61 36 ~-1 ~ ~-1
+execute if score n posible_tile matches 5 run clone -7 56 38 -9 61 36 ~-1 ~ ~-1
+
+# Adding tags:
+execute if score n posible_tile matches 1 run tag @s add tile_1_placed
+execute if score n posible_tile matches 2 run tag @s add tile_2_placed
+execute if score n posible_tile matches 3 run tag @s add tile_3_placed
+execute if score n posible_tile matches 4 run tag @s add tile_4_placed
+execute if score n posible_tile matches 5 run tag @s add tile_5_placed
+
+# Adding "finded" tag:
+function wfc:wfc/placed
+```
+Colocamos la pieza usando el "**/clone**", también le damos una tag para saber que pieza se ha colocado y ejecutamos "**wfc:wfc/placed**", la cual le quita la tag de "**finding**", le da la tag de "**finded**" y le pone el scoreboard el valor 0, como esa casilla ya tiene una pieza no puede tener otra asi que le por eso le ponemos el valor de 0, sigamos viendo "**wfc:wfc/find**".
+
+Por otro lado, si no puede tener todas las piezas y ya ha sido colapsada (la tag de "**collapsed**" es para saber si el número de posibilidades se ha reducido debido a una casilla cercana) llamamos "**wfc:wfc/if_collapsed**", miremos a ver que hace.
+```mcfunction
+# Change number:
+execute store result score n posible_tile run loot spawn ~ ~ ~ loot wfc:1-5
+execute store result score r_can_be posible_tile run loot spawn ~ ~ ~ loot wfc:1-5
+
+# Setting:
+execute if score r_can_be posible_tile matches 1 if entity @s[tag=can_be_tile_1] run scoreboard players set can_be posible_tile 1
+execute if score r_can_be posible_tile matches 2 if entity @s[tag=can_be_tile_2] run scoreboard players set can_be posible_tile 2
+execute if score r_can_be posible_tile matches 3 if entity @s[tag=can_be_tile_3] run scoreboard players set can_be posible_tile 3
+execute if score r_can_be posible_tile matches 4 if entity @s[tag=can_be_tile_4] run scoreboard players set can_be posible_tile 4
+execute if score r_can_be posible_tile matches 5 if entity @s[tag=can_be_tile_5] run scoreboard players set can_be posible_tile 5
+
+# If:
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 1 if entity @s[tag=can_be_tile_1] run clone 9 56 38 7 61 36 ~-1 ~ ~-1
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 2 if entity @s[tag=can_be_tile_2] run clone 5 56 38 3 61 36 ~-1 ~ ~-1
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 3 if entity @s[tag=can_be_tile_3] run clone 1 56 38 -1 61 36 ~-1 ~ ~-1
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 4 if entity @s[tag=can_be_tile_4] run clone -3 56 38 -5 61 36 ~-1 ~ ~-1
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 5 if entity @s[tag=can_be_tile_5] run clone -7 56 38 -9 61 36 ~-1 ~ ~-1
+
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 1 if entity @s[tag=can_be_tile_1] run tag @s add tile_1_placed
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 2 if entity @s[tag=can_be_tile_2] run tag @s add tile_2_placed
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 3 if entity @s[tag=can_be_tile_3] run tag @s add tile_3_placed
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 4 if entity @s[tag=can_be_tile_4] run tag @s add tile_4_placed
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 5 if entity @s[tag=can_be_tile_5] run tag @s add tile_5_placed
+
+# If not:
+execute unless score n posible_tile = can_be posible_tile run function wfc:wfc/if_collapsed
+
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 1 unless entity @s[tag=can_be_tile_1] run function wfc:wfc/if_collapsed
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 2 unless entity @s[tag=can_be_tile_2] run function wfc:wfc/if_collapsed
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 3 unless entity @s[tag=can_be_tile_3] run function wfc:wfc/if_collapsed
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 4 unless entity @s[tag=can_be_tile_4] run function wfc:wfc/if_collapsed
+execute if score n posible_tile = can_be posible_tile if score n posible_tile matches 5 unless entity @s[tag=can_be_tile_5] run function wfc:wfc/if_collapsed
+```
+Vale a ver, mucho texto, pero no pasa nada, es bastante simple. Básicamente estamos eligiendo una de las casillas de las que ese armor stand puede ser para colocarla. Digamos que esa casilla puede ser la piza 1 y 5 (entonces tiene las tags: "**can_be_tile_1**" y "**can_be_tile_5**"), así que tenemos que poner la pieza 1 o 5, "n" es la casilla que intentamos poner y "r_can_be" es la que vamos a poner. Si los dos scores tienen el mismo valor colocamos esa pieza y le damos sus tags y scores correspondientes, sino llamamos a la función otra vez para resetear los dos valores y lo volvemos a intentar. Usando "r_can_be" nos aseguramos de que la elección es aleatoria y también reseteamos "n" al porque hay una posibilidad de que "n" sea una casilla que no podemos poner asi que la reseteamos por si acaso. Si nada de esto tiene sentido para ti tranquilo, yo tampoco le encuentro mucho sentido la verdad. Cuando hice esta función tenía 100% sentido, pero 5 días despues ya no la entiendo. Afortunadamente ChatGPT pudo entenderla y me la explicó pero aun así no la llego a entender del todo. PERO, el código funciona a la perfección y si lo cambio a cómo creo que debería ser no funciona asi que tengo fe en que esta bien hecha (si algún día vuelvo a entenderla editaré esto).
+
+Vale, después de este incidente continuemos mirando "**wfc:wfc/find**". Si no puede ser cualquiera de las 5 piezas pero no ha sido colapsada (un escenario bastante raro pero creo lo cubrimos en caso de que pase) llamamos "**wfc:wfc/not_collapsed**" pero sin llamar "**wfc:wfc/placed**" al final.
+
+Después, vamos a comprobar si las casillas de alrededor admiten la casilla que vamos a poner, en caso de que sí perfecto, pero si no la admiten vamos a resetear las casillas que no la admitan. Para hacerlo llamamos a la función "**wfc:wfc/check/check**", la cual llamará a la función correspondiente para comprobar las de alrededor según la pieza que pusimos:
+```mcfunction
+# Different tiles:
+execute if score n posible_tile matches 1 run function wfc:wfc/check/tile1
+execute if score n posible_tile matches 2 run function wfc:wfc/check/tile2
+execute if score n posible_tile matches 3 run function wfc:wfc/check/tile3
+execute if score n posible_tile matches 4 run function wfc:wfc/check/tile4
+execute if score n posible_tile matches 5 run function wfc:wfc/check/tile5
+```
+Digamos que pusimos la pieza 1, entonces llamamos la función de "**wfc:wfc/check/tile1**":
+```mcfunction
+# Check if any near tile isn't a tile 1 compatible:
+execute if entity @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_1_placed] as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_1_placed] at @s run function wfc:wfc/reset_tiles
+execute if entity @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_2_placed] as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_2_placed] at @s run function wfc:wfc/reset_tiles
+execute if entity @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_5_placed] as @e[type=minecraft:armor_stand,tag=posible_tile,distance=2..3.1,tag=tile_5_placed] at @s run function wfc:wfc/reset_tiles
+```
+Simplemente comprobamos si alguna de las casillas cercanas no admiten una casilla 1, si la hay, ejecutamos con todas estas piezas en el rango (las cuatro piezas cercanas) la función "**wfc:wfc/reset_tiles**", la cual reinicia esa casilla:
+```mcfunction
+# Reset current tile (@s):
+fill ~1 ~ ~1 ~-1 ~10 ~-1 air
+kill @e[type=item]
+tag @s[tag=finded] remove finded
+tag @s add finding
+tag @s[tag=tile_1_placed] remove tile_1_placed
+tag @s[tag=tile_2_placed] remove tile_2_placed
+tag @s[tag=tile_3_placed] remove tile_3_placed
+tag @s[tag=tile_4_placed] remove tile_4_placed
+tag @s[tag=tile_5_placed] remove tile_5_placed
+tag @s[tag=tile_1_placed] remove tile_1_placed
+tag @s[tag=tile_2_placed] remove tile_2_placed
+tag @s[tag=tile_3_placed] remove tile_3_placed
+tag @s[tag=tile_4_placed] remove tile_4_placed
+tag @s[tag=tile_5_placed] remove tile_5_placed
+```
+Sigamos mirando "**wfc:wfc/find**". Ahora llamamos la función "**wfc:wfc/placed**" (la cual ya he explicado). Después, colapsamos las casillas cercanas en base a la casilla que vamos a poner, digamos que vamos a poner la pieza 1, entonces llamamos la función "**wfc:wfc/collapse/tile1**" como todas las 4 casillas cercanas que aun no han sido colapsadas (el término colapsado se está usando mal aquí pero da igual):
+```mcfunction
+# Collapse near tiles:
+scoreboard players set @s posible_tile 2
+tag @s add can_be_tile_3
+tag @s add can_be_tile_4
+tag @s add collapsed
+```
+Como la pieza 1 solo admite piezas 2 y 4 (en este caso) aplicamos ambas tags, le ponemos el valor del scoreboard apropiado (en este caso se lo cambiamos a 2 porque solo admite 2 diferentes piezas) y le damos la tag de "**collapsed**" para indicar que ese armor stand ha sido colapsado. Después de eso, en "**wfc:wfc/find**" llamamos a la función "**wfc:wfc/lowest_value**" para encontrar al armor stand con el valor más pequeño en el scoreboard y al encontrarlo le damos la tag de "**finding**", haciendo esto un bucle hasta que el tablero se termina.
+</details>
+
+## Cosas importantes a tener en cuenta
+
+### Reducir las casillas cercanas
+El algoritmo original reduce las posibilidades de las casillas cercanas en base a donde estan, por ejemplo, si tenemos la pieza 1, y queremos que a la izquiera solo pueda haber las segundas piezas, pero a la derecha solamente admita pizas 3, entonces el algoritmo hará eso, pero en esta recreación reducimos las posibilidades de las 4 casillas cercanas a las mismas posibilidades. Es muy sencillo de cambiar, simplemente cambiar que tags le das a cada casilla indidualmente (norte, sur, este y oeste). (Si a esto que acabo de decir no le encontrais sentido mirar esta pequeña parte de [este]((https://youtu.be/rI_y2GAlQFM?t=396)) vídeo para entenderlo)
+
+The original algorithm reduces the possibilities near tiles can be based on where they are, for example, we have tile 1, and we want that to the left of tiles 1 there can only be tiles 2, but to the right only tiles 3, then the algorithm will do just that, but with mine is set to the same possibilities to the four neighbouring tiles. It's very easy to change, just change the tags you give to the near tiles and the score individually for each tile (north, south, east and west). (If that didn't make sense to you watch [this](https://youtu.be/rI_y2GAlQFM?t=396) explanation).
+
+## FAQ
+
+#### Q: ¿Puedo modificar el datapack y redistribuirlo?
+
+A: Si que puedes, en mis otros datapacks te pidiría reconocimiento pero por esto no hace falta, Úsalo cómo quieras.
+
+#### Q: ¿Vas a hacer más datapacks?
+
+A: Sí, voy a seguir desarrolando uno que ya había empezado.
+
+## Autor
+
+- [@ElGeroIngles](https://github.com/ElGeroIngles)
+
+## Reportar Errores
+
+Si has encontrado algún error, por favor abre un error ("issue") [aquí](https://github.com/ElGeroIngles/wfc_mc/issues) explicándolo.
+
+## 🔗 Enlaces
+[![youtube](https://img.shields.io/badge/youtube-ff0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@ElGeroIngles)
+[![twitch](https://img.shields.io/badge/twitch-6441a5?style=for-the-badge&logo=twitch&logoColor=white)](https://www.twitch.tv/elgeroingles)
+[![discord](https://img.shields.io/badge/discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/4pYjW9btNc)
+[![modrinth](https://img.shields.io/badge/modrinth-5AD770?style=for-the-badge&logo=modrinth&logoColor=white)](https://modrinth.com/user/ElGeroIngles)
+[![github](https://img.shields.io/badge/github-000000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ElGeroIngles)
+[![BuyMeACoffe](https://img.shields.io/badge/BuyMeACoffe-ffdd02?style=for-the-badge&logo=buymeacoffee&logoColor=white)](https://www.buymeacoffee.com/ElGeroIngles)
+
+## Licencia
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
 </details>
