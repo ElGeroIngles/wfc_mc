@@ -532,9 +532,7 @@ Como la pieza 1 solo admite piezas 2 y 4 (en este caso) aplicamos ambas tags, le
 ## Cosas importantes a tener en cuenta
 
 ### Reducir las casillas cercanas
-El algoritmo original reduce las posibilidades de las casillas cercanas en base a donde estan, por ejemplo, si tenemos la pieza 1, y queremos que a la izquiera solo pueda haber las segundas piezas, pero a la derecha solamente admita pizas 3, entonces el algoritmo hará eso, pero en esta recreación reducimos las posibilidades de las 4 casillas cercanas a las mismas posibilidades. Es muy sencillo de cambiar, simplemente cambiar que tags le das a cada casilla indidualmente (norte, sur, este y oeste). (Si a esto que acabo de decir no le encontrais sentido mirar esta pequeña parte de [este]((https://youtu.be/rI_y2GAlQFM?t=396)) vídeo para entenderlo)
-
-The original algorithm reduces the possibilities near tiles can be based on where they are, for example, we have tile 1, and we want that to the left of tiles 1 there can only be tiles 2, but to the right only tiles 3, then the algorithm will do just that, but with mine is set to the same possibilities to the four neighbouring tiles. It's very easy to change, just change the tags you give to the near tiles and the score individually for each tile (north, south, east and west). (If that didn't make sense to you watch [this](https://youtu.be/rI_y2GAlQFM?t=396) explanation).
+El algoritmo original reduce las posibilidades de las casillas cercanas en base a donde estan, por ejemplo, si tenemos la pieza 1, y queremos que a la izquiera solo pueda haber las segundas piezas, pero a la derecha solamente admita pizas 3, entonces el algoritmo hará eso, pero en esta recreación reducimos las posibilidades de las 4 casillas cercanas a las mismas posibilidades. Es muy sencillo de cambiar, simplemente cambiar que tags le das a cada casilla indidualmente (norte, sur, este y oeste). (Si a esto que acabo de decir no le encontrais sentido mirar esta pequeña parte de [este](https://youtu.be/rI_y2GAlQFM?t=396) vídeo para entenderlo)
 
 ## FAQ
 
